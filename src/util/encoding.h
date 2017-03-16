@@ -11,30 +11,27 @@
 #include <string>
 #include <iostream>
 
+#include <goo/GooString.h>
 #include <CharTypes.h>
 
 namespace pdf2htmlEX {
 
-/*
- * Escape necessary characters, and map Unicode to UTF-8
- */
-void writeUnicodes(std::ostream & out, const Unicode * u, int uLen);
+    /*
+     * Escape necessary characters, and map Unicode to UTF-8
+     */
+    void writeUnicodes(std::ostream &out, const Unicode *u, int uLen);
 
+    void writeUnicodes(std::ostream &out, const GooString *);
 
-/*
- * URL escaping
- */
-//void writeURL(std::ostream & out, const std::string & s);
+    /*
+     * JSON escaping
+     */
+    void writeJSON(std::ostream &out, const std::string &s);
 
-/*
- * JSON escaping
- */
-void writeJSON(std::ostream & out, const std::string & s);
-
-/*
- * HTML tag attribute escaping
- */
-void writeAttribute(std::ostream & out, const std::string & s);
+    /*
+     * HTML tag attribute escaping
+     */
+    void writeAttribute(std::ostream &out, const std::string &s);
 
 } // namespace pdf2htmlEX
 
