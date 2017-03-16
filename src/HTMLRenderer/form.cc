@@ -44,7 +44,8 @@ void HTMLRenderer::process_form(ofstream & out)
             double font_size = height / 2;
 
             out << "<input id=\"text-" << pageNum << "-" << i 
-                << "\" class=\"" << CSS::INPUT_TEXT_CN 
+                << "\" class=\"" << CSS::INPUT_TEXT_CN
+                << "\" name=\"" << w->getFullyQualifiedName()->getCString()
                 << "\" type=\"text\" value=\"\""
                 << " style=\"position: absolute; left: " << x1 
                 << "px; bottom: " << y1 << "px;" 
@@ -59,7 +60,8 @@ void HTMLRenderer::process_form(ofstream & out)
             width += 3;
             height += 3;
 
-            out << "<div id=\"cb-" << pageNum << "-" << i 
+            out << "<div id=\"cb-" << pageNum << "-" << i
+                << "\" data-name=\"" << w->getFullyQualifiedName()->getCString()
                 << "\" class=\"" << CSS::INPUT_RADIO_CN 
                 << "\" style=\"position: absolute; left: " << x1 
                 << "px; bottom: " << y1 << "px;" 
