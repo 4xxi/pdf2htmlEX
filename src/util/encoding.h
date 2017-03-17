@@ -21,8 +21,6 @@ namespace pdf2htmlEX {
      */
     void writeUnicodes(std::ostream &out, const Unicode *u, int uLen);
 
-    void writeUnicodes(std::ostream &out, const GooString *);
-
     /*
      * JSON escaping
      */

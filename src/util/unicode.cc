@@ -67,4 +67,5 @@ Unicode check_unicode(Unicode * u, int len, CharCode code, GfxFont * font)
     return unicode_from_font(code, font);
 }
 
+
 } //namespace pdf2htmlEX

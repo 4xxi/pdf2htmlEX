@@ -82,17 +82,6 @@ namespace pdf2htmlEX {
         }
     }
 
-    void writeUnicodes(ostream &out, const GooString *data) {
-        if (data != nullptr) {
-            const char *textCString = data->getCString();
-            if (textCString[0] == '\xfe' && textCString[1] == '\xff') {
-                for (int i = 3; i < data->getLength(); i += 2) out << textCString[i];
-            } else {
-                out << textCString;
-            }
-        }
-    }
-
     void writeJSON(ostream &out, const string &s) {
         for (auto c : s) {
             switch (c) {
