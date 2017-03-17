@@ -86,6 +86,7 @@ namespace pdf2htmlEX {
                 out << "<input name=\"" << w->getFullyQualifiedName()
                     << "\" type=\"checkbox\""
                     << checked
+                    << "data-checked=\"" << button->getOnStr() << "\""
                     << "style=\"position: absolute; border: 1px solid #000; padding: 0px; margin: 0px; background-color: white; left: "
                     << x1
                     << "px; bottom: " << y1 << "px;"
