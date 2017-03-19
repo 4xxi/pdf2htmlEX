@@ -74,8 +74,7 @@ namespace pdf2htmlEX {
                 << "\" maxlength=\"" << TO_STR(maxLength)
                 << "\" type=\"text\" value=\""
                 << textWidget->getContent() << "\""
-                << "style=\"position: absolute; background-color: #fff; padding: 0px; margin: 1px; left: " << pos.x1
-                << "px; bottom: " << y1 << "px;"
+                << "style=\"left: " << pos.x1 << "px; bottom: " << pos.y1 << "px;"
                 << " width: " << width << "px; height: " << TO_STR(height)
                 << "px; line-height: " << TO_STR(height) << "px; font-size: "
                 << fontSize << "px;\" />" << endl;
@@ -91,11 +90,8 @@ namespace pdf2htmlEX {
                 << "\" type=\"checkbox\""
                 << checked
                 << "data-checked=\"" << formWidgetButton->getOnStr() << "\""
-                << "style=\"position: absolute; border: 1px solid #000; padding: 0px; margin: 0px; background-color: white; left: "
-                << pos.x1
-                << "px; bottom: " << pos.y1 << "px;"
-                << " width: " << width << "px; height: "
-                << TO_STR(height) << "px;\" >" << endl;
+                << "style=\"left: " << pos.x1 << "px; bottom: " << pos.y1 << "px;"
+                << " width: " << width << "px; height: " << TO_STR(height) << "px;\" />" << endl;
         }
     };
 
