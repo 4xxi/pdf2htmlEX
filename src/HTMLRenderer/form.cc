@@ -17,23 +17,36 @@
 
 #define TO_STR(V) std::to_string((V))
 
-std::ostream &operator<<(std::ostream &out, GooString *data) {
-    static gchar *utf8 = nullptr;
+const char *UTF_16_BE_BOM = "\xFE\xFF";
+const char *UTF_8_BOM = "\xEF\xBB\xBF";
 
-    if (utf8 == nullptr) {
-        utf8 = (gchar *) malloc(sizeof(gchar) * 2048);
-    } else {
-        utf8[0] = '\0';
+int check_bom(const char *data, size_t size) {
+
+    if (size >= 3 && memcmp(data, UTF_8_BOM, 3) == 0) {
+        return 0;
+    }
+    if (size >= 2 && memcmp(data, UTF_16_BE_BOM, 2) == 0) {
+            return 1;
     }
 
+    return -1;
+}
+
+std::ostream &operator<<(std::ostream &out, GooString *data) {
     if (data == nullptr) {
         return out;
     }
 
-    gsize writeBytes = 0;
-    utf8 = g_convert(data->getCString(), data->getLength(), "UTF-8", "UTF-16BE", NULL, &writeBytes, NULL);
-    out.write(utf8, writeBytes);
-
+    if (check_bom(data->getCString(), data->getLength()) == 1) {
+        gsize writeBytes = 0;
+        utf8 = g_convert(data->getCString(), data->getLength(), "UTF-8", "UTF-16BE", NULL, &writeBytes, NULL);
+        if (writeBytes > 0) {
+            out.write(utf8, writeBytes);
+        }
+    } else {
+        out.write(data->getCString(), data->getLength());
+    }
+    
     return out;
 }
 
