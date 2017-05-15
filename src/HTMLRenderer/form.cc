@@ -39,14 +39,15 @@ std::ostream &operator<<(std::ostream &out, GooString *data) {
 
     if (check_bom(data->getCString(), data->getLength()) == 1) {
         gsize writeBytes = 0;
-        utf8 = g_convert(data->getCString(), data->getLength(), "UTF-8", "UTF-16BE", NULL, &writeBytes, NULL);
+        gchar * utf8 = g_convert(data->getCString(), data->getLength(), "UTF-8", "UTF-16BE", NULL, &writeBytes, NULL);
         if (writeBytes > 0) {
             out.write(utf8, writeBytes);
         }
+        free(utf8);
     } else {
         out.write(data->getCString(), data->getLength());
     }
-    
+
     return out;
 }
 
