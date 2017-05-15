@@ -10,7 +10,6 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <codecvt>
 #include <util/encoding.h>
 #include <glib.h>
 #include "HTMLRenderer.h"
