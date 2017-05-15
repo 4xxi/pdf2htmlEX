@@ -31,7 +31,7 @@ std::ostream &operator<<(std::ostream &out, GooString *data) {
     }
 
     gsize writeBytes = 0;
-    gchar *utf8 = g_convert(data->getCString(), data->getLength(), "UTF-8", "UTF-16BE", NULL, &writeBytes, NULL);
+    utf8 = g_convert(data->getCString(), data->getLength(), "UTF-8", "UTF-16BE", NULL, &writeBytes, NULL);
     out.write(utf8, writeBytes);
 
     return out;
