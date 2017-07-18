@@ -83,15 +83,32 @@ namespace pdf2htmlEX {
             double fontSize = height - 2;
             int maxLength = textWidget->getMaxLen() > 0 ? textWidget->getMaxLen() : 900000;
 
-            out << "<input class=\"" << CSS::INPUT_TEXT_CN
-                << "\" name=\"" << textWidget->getFullyQualifiedName()
-                << "\" maxlength=\"" << TO_STR(maxLength)
-                << "\" type=\"text\" value=\""
-                << textWidget->getContent() << "\""
-                << "style=\"left: " << pos.x1 << "px; bottom: " << pos.y1 << "px;"
-                << " width: " << width << "px; height: " << TO_STR(height)
-                << "px; line-height: " << TO_STR(height) << "px; font-size: "
-                << fontSize << "px;\" />" << endl;
+            if (textWidget->isMultiline()) {
+                fontSize = 12;
+                int textareaRows = (int) (width / fontSize);
+                textareaRows = textareaRows == 0 ? 1 : textareaRows;
+
+                out << "<textarea class=\"" << CSS::INPUT_TEXT_CN << "\" "
+                    << "name=\"" << textWidget->getFullyQualifiedName() << "\" "
+                    << "maxlength=\"" << TO_STR(maxLength) << "\" "
+                    << "rows=\"" << TO_STR(textareaRows) << "\" "
+                    << "type=\"text\" "
+                    << "value=\"" << textWidget->getContent() << "\" "
+                    << "style=\"left: " << pos.x1 << "px; bottom: " << pos.y1 << "px;"
+                    << "width: " << width << "px;" << "height: " << TO_STR(height) << "px;"
+                    << "font-size: " << fontSize << "px;\"></textarea>" << endl;
+            } else {
+                out << "<input class=\"" << CSS::INPUT_TEXT_CN
+                    << "\" name=\"" << textWidget->getFullyQualifiedName()
+                    << "\" maxlength=\"" << TO_STR(maxLength)
+                    << "\" type=\"text\" value=\""
+                    << textWidget->getContent() << "\""
+                    << "style=\"left: " << pos.x1 << "px; bottom: " << pos.y1 << "px;"
+                    << " width: " << width << "px; height: " << TO_STR(height)
+                    << "px; line-height: " << TO_STR(height) << "px; font-size: "
+                    << fontSize << "px;\" />" << endl;
+            }
+
         }
 
         static void print(ofstream &out, InputPosition &pos, FormWidgetButton *formWidgetButton) {

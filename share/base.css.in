@@ -5,7 +5,7 @@
  * https://github.com/coolwanglu/pdf2htmlEX/blob/master/share/LICENSE
  */
 /* Part 1: Web Page Layout: Free to modify, except for a few of them which are required by pdf2htmlEX.js, see the comments */
-input {
+input, textarea {
     position: absolute;
     background-color: white !important;
 
