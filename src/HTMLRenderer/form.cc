@@ -93,10 +93,10 @@ namespace pdf2htmlEX {
                     << "maxlength=\"" << TO_STR(maxLength) << "\" "
                     << "rows=\"" << TO_STR(textareaRows) << "\" "
                     << "type=\"text\" "
-                    << "value=\"" << textWidget->getContent() << "\" "
                     << "style=\"left: " << pos.x1 << "px; bottom: " << pos.y1 << "px;"
                     << "width: " << width << "px;" << "height: " << TO_STR(height) << "px;"
-                    << "font-size: " << fontSize << "px;\"></textarea>" << endl;
+                    << "font-size: " << fontSize << "px;\""
+                    <<">" << textWidget->getContent() << "</textarea>" << endl;
             } else {
                 out << "<input class=\"" << CSS::INPUT_TEXT_CN
                     << "\" name=\"" << textWidget->getFullyQualifiedName()
