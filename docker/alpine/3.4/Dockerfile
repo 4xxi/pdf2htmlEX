@@ -1,6 +1,7 @@
-FROM php:7.1-alpine
+FROM alpine:3.4
 
 ARG POPPLER_VERSION=poppler-0.54.0
+COPY ./docker/alpine/3.4/msttcorefonts-installer.apk /msttcorefonts-installer.apk
 
 RUN apk --update add \
                 alpine-sdk \
@@ -21,7 +22,7 @@ RUN apk --update add \
                 font-adobe-100dpi \
                 ttf-freefont && \
     #install ms fonts
-    apk --update add msttcorefonts-installer && update-ms-fonts --quiet && apk del msttcorefonts-installer && \
+    apk add /msttcorefonts-installer.apk && update-ms-fonts --quiet && apk del msttcorefonts-installer && rm -rf /msttcorefonts-installer.apk \
     #install libspiro
     cd / && wget https://github.com/fontforge/libspiro/releases/download/0.5.20150702/libspiro-0.5.20150702.tar.gz && \
     tar -xvf libspiro-0.5.20150702.tar.gz && cd libspiro-0.5.20150702 && \
