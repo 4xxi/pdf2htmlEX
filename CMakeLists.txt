@@ -16,13 +16,19 @@ add_custom_target(dist
         | bzip2 > ${CMAKE_BINARY_DIR}/${ARCHIVE_NAME}.tar.bz2
     WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
 
+# SET(ENV{PKG_CONFIG_PATH} "/usr/local/Cellar/pdf2htmlex/0.14.6_11/fontforge/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
 find_package(PkgConfig)
-
 
 pkg_check_modules(POPPLER REQUIRED poppler>=0.25.0)
 include_directories(${POPPLER_INCLUDE_DIRS})
 link_directories(${POPPLER_LIBRARY_DIRS})
 set(PDF2HTMLEX_LIBS ${PDF2HTMLEX_LIBS} ${POPPLER_LIBRARIES})
+
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GLIB_PKG glib-2.0)
+include_directories(${GLIB_PKG_INCLUDE_DIRS})
+link_directories(${GLIB_PKG_LIBRARY_DIRS})
+set(PDF2HTMLEX_LIBS ${PDF2HTMLEX_LIBS} ${GLIB_PKG_LIBRARIES})
 
 if(ENABLE_SVG)
     pkg_check_modules(CAIRO REQUIRED cairo>=1.10.0)

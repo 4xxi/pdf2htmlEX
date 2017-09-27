@@ -5,8 +5,24 @@
  * https://github.com/coolwanglu/pdf2htmlEX/blob/master/share/LICENSE
  */
 /* Part 1: Web Page Layout: Free to modify, except for a few of them which are required by pdf2htmlEX.js, see the comments */
+input, textarea {
+    position: absolute;
+    background-color: white !important;
+
+    margin: 0px;
+    padding: 0px;
+}
+
+input[type="checkbox"] {
+    border: 1px solid #000;
+}
+
+input[type="text"] {
+    margin: 1px;
+}
+
 #sidebar { /* Sidebar */
-  position:absolute;
+  position:relative;
   top:0;
   left:0;
   bottom:0;
