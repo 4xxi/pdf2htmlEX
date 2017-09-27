@@ -22,7 +22,7 @@ RUN apk --update add \
                 font-adobe-100dpi \
                 ttf-freefont && \
     #install ms fonts
-    apk add /msttcorefonts-installer.apk && update-ms-fonts --quiet && apk del msttcorefonts-installer && rm -rf /msttcorefonts-installer.apk \
+    apk add /msttcorefonts-installer.apk && update-ms-fonts --quiet && apk del msttcorefonts-installer && rm -rf /msttcorefonts-installer.apk && \
     #install libspiro
     cd / && wget https://github.com/fontforge/libspiro/releases/download/0.5.20150702/libspiro-0.5.20150702.tar.gz && \
     tar -xvf libspiro-0.5.20150702.tar.gz && cd libspiro-0.5.20150702 && \
