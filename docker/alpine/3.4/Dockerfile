@@ -1,7 +1,7 @@
 FROM alpine:3.4
 
 ARG POPPLER_VERSION=poppler-0.54.0
-COPY ./docker/alpine/3.4/msttcorefonts-installer.apk /msttcorefonts-installer.apk
+COPY ./msttcorefonts-installer.apk /msttcorefonts-installer.apk
 
 RUN apk --update add \
                 alpine-sdk \
