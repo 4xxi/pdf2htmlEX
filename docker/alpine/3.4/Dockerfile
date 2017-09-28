@@ -21,6 +21,7 @@ RUN apk --update add \
                 libjpeg-turbo-dev \
                 font-adobe-100dpi \
                 ttf-freefont && \
+    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig && \
     #install ms fonts
     apk add /msttcorefonts-installer.apk && update-ms-fonts --quiet && apk del msttcorefonts-installer && rm -rf /msttcorefonts-installer.apk && \
     #install libspiro
@@ -31,7 +32,6 @@ RUN apk --update add \
     cd / && wget https://poppler.freedesktop.org/${POPPLER_VERSION}.tar.xz && tar -xvf ${POPPLER_VERSION}.tar.xz && \
     cd /${POPPLER_VERSION} && ./configure --enable-xpdf-headers && make && make install && \
     # install fontforge
-    export PKG_CONFIG_PATH=$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig && \
     cd / && git clone --depth 1 -o origin -b pdf2htmlEX https://github.com/4xxi/fontforge.git && cd /fontforge && \
     ./autogen.sh && ./configure --without-libzmq --without-x --without-iconv --disable-python-scripting --disable-python-extension && \
     make && make install && \
