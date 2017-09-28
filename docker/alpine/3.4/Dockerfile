@@ -27,13 +27,13 @@ RUN apk --update add \
     #install libspiro
     cd / && wget https://github.com/fontforge/libspiro/releases/download/0.5.20150702/libspiro-0.5.20150702.tar.gz && \
     tar -xvf libspiro-0.5.20150702.tar.gz && cd libspiro-0.5.20150702 && \
-    autoreconf -i && automake --foreign -Wall && ./configure && make && make install && \
+    autoreconf -i && automake --foreign -Wall && ./configure --prefix=/usr && make && make install && \
     # install poppler
     cd / && wget https://poppler.freedesktop.org/${POPPLER_VERSION}.tar.xz && tar -xvf ${POPPLER_VERSION}.tar.xz && \
-    cd /${POPPLER_VERSION} && ./configure --enable-xpdf-headers && make && make install && \
+    cd /${POPPLER_VERSION} && ./configure --prefix=/usr --enable-xpdf-headers && make && make install && \
     # install fontforge
     cd / && git clone --depth 1 -o origin -b pdf2htmlEX https://github.com/4xxi/fontforge.git && cd /fontforge && \
-    ./autogen.sh && ./configure --without-libzmq --without-x --without-iconv --disable-python-scripting --disable-python-extension && \
+    ./autogen.sh && ./configure --prefix=/usr --without-libzmq --without-x --without-iconv --disable-python-scripting --disable-python-extension && \
     make && make install && \
     # install pdf2htmlEX
     cd / && git clone --depth 1 -o origin -b master https://github.com/4xxi/pdf2htmlEX.git && \
