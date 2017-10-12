@@ -9,7 +9,6 @@
 
 #include <iostream>
 #include <sstream>
-#include <string>
 #include <util/encoding.h>
 #include <glib.h>
 #include "HTMLRenderer.h"
@@ -26,7 +25,7 @@ int check_bom(const char *data, size_t size) {
         return 0;
     }
     if (size >= 2 && memcmp(data, UTF_16_BE_BOM, 2) == 0) {
-            return 1;
+        return 1;
     }
 
     return -1;
@@ -39,7 +38,7 @@ std::ostream &operator<<(std::ostream &out, GooString *data) {
 
     if (check_bom(data->getCString(), data->getLength()) == 1) {
         gsize writeBytes = 0;
-        gchar * utf8 = g_convert(data->getCString(), data->getLength(), "UTF-8", "UTF-16BE", NULL, &writeBytes, NULL);
+        gchar *utf8 = g_convert(data->getCString(), data->getLength(), "UTF-8", "UTF-16BE", NULL, &writeBytes, NULL);
         if (writeBytes > 0) {
             out.write(utf8, writeBytes);
         }
@@ -50,6 +49,21 @@ std::ostream &operator<<(std::ostream &out, GooString *data) {
 
     return out;
 }
+
+class SelectWidget : public FormWidgetChoice {
+public:
+    SelectWidget(PDFDoc *docA, Object *dict, unsigned int num, const Ref &ref, FormField *p) :
+            FormWidgetChoice(docA, dict, num, ref, p) {}
+
+    GooString* getOptionName(int i) {
+        return this->parent()->getChoice(i);
+    }
+
+    GooString* getOptionVal(int i) {
+        GooString * exportValue = this->parent()->getExportVal(i);
+        return exportValue == nullptr ? this->getOptionName(i) : exportValue;
+    }
+};
 
 namespace pdf2htmlEX {
 
@@ -96,7 +110,7 @@ namespace pdf2htmlEX {
                     << "style=\"left: " << pos.x1 << "px; bottom: " << pos.y1 << "px;"
                     << "width: " << width << "px;" << "height: " << TO_STR(height) << "px;"
                     << "font-size: " << fontSize << "px;\""
-                    <<">" << textWidget->getContent() << "</textarea>" << endl;
+                    << ">" << textWidget->getContent() << "</textarea>" << endl;
             } else {
                 out << "<input class=\"" << CSS::INPUT_TEXT_CN
                     << "\" name=\"" << textWidget->getFullyQualifiedName()
@@ -114,7 +128,7 @@ namespace pdf2htmlEX {
         static void print(ofstream &out, InputPosition &pos, FormWidgetButton *formWidgetButton) {
             double width = pos.getWidth() + 1;
             double height = pos.getHeight() + 1;
-            const char *checked = formWidgetButton->getState() ? "checked=\"checked\"" : "";
+            std::string checked = formWidgetButton->getState() ? "checked=\"checked\"" : "";
 
             out << "<input name=\"" << formWidgetButton->getFullyQualifiedName()
                 << "\" type=\"checkbox\""
@@ -122,6 +136,28 @@ namespace pdf2htmlEX {
                 << "data-checked=\"" << formWidgetButton->getOnStr() << "\""
                 << "style=\"left: " << pos.x1 << "px; bottom: " << pos.y1 << "px;"
                 << " width: " << width << "px; height: " << TO_STR(height) << "px;\" />" << endl;
+        }
+
+        static void print(ofstream &out, InputPosition &pos, SelectWidget *widget) {
+            double width = pos.getWidth() + 1;
+            double height = pos.getHeight() + 3;
+
+            std::string multiple = widget->isMultiSelect() ? " multiple " : "";
+
+            out << "<select name=\"" << widget->getFullyQualifiedName()
+                << "\"" << multiple
+                << "style=\"left: " << pos.x1 << "px; bottom: " << pos.y1 << "px;"
+                << " width: " << width << "px; height: " << TO_STR(height) << "px;\" >" << endl;
+
+            for (int i = 0; i < widget->getNumChoices(); i++) {
+                out << "<option value=\"" << widget->getOptionVal(i) << "\" "
+                    << (widget->isSelected(i) ? "selected" : "") << ">"
+                    << widget->getOptionName(i)
+                    << "</option>";
+            }
+
+            out << "</select>";
+
         }
     };
 
@@ -137,6 +173,8 @@ namespace pdf2htmlEX {
                 FormPrint::print(out, position, static_cast<FormWidgetText *>(w));
             } else if (w->getType() == formButton) {
                 FormPrint::print(out, position, static_cast<FormWidgetButton *>(w));
+            } else if (w->getType() == formChoice) {
+                FormPrint::print(out, position, static_cast<SelectWidget *>(w));
             } else {
                 cerr << "Unsupported form field detected" << endl;
             }
