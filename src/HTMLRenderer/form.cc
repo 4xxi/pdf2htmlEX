@@ -55,13 +55,12 @@ public:
     SelectWidget(PDFDoc *docA, Object *dict, unsigned int num, const Ref &ref, FormField *p) :
             FormWidgetChoice(docA, dict, num, ref, p) {}
 
-    GooString* getOptionName(int i) {
+    GooString *getOptionName(int i) {
         return this->parent()->getChoice(i);
     }
 
-    GooString* getOptionVal(int i) {
-        GooString * exportValue = this->parent()->getExportVal(i);
-        return exportValue == nullptr ? this->getOptionName(i) : exportValue;
+    GooString * getOptionVal(int i) {
+        return this->parent()->getExportVal(i);
     }
 };
 
@@ -141,7 +140,6 @@ namespace pdf2htmlEX {
         static void print(ofstream &out, InputPosition &pos, SelectWidget *widget) {
             double width = pos.getWidth() + 1;
             double height = pos.getHeight() + 3;
-
             std::string multiple = widget->isMultiSelect() ? " multiple " : "";
 
             out << "<select name=\"" << widget->getFullyQualifiedName()
@@ -150,10 +148,15 @@ namespace pdf2htmlEX {
                 << " width: " << width << "px; height: " << TO_STR(height) << "px;\" >" << endl;
 
             for (int i = 0; i < widget->getNumChoices(); i++) {
+                GooString * defaultVal = widget->getOptionVal(i);
+                GooString * fromNum = GooString::fromInt(i);
+
                 out << "<option value=\"" << widget->getOptionVal(i) << "\" "
                     << (widget->isSelected(i) ? "selected" : "") << ">"
-                    << widget->getOptionName(i)
+                    << (defaultVal == nullptr ? fromNum : defaultVal)
                     << "</option>";
+
+                free(fromNum);
             }
 
             out << "</select>";
