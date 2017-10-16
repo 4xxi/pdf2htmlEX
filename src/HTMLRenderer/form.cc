@@ -60,7 +60,8 @@ public:
     }
 
     GooString * getOptionVal(int i) {
-        return this->parent()->getExportVal(i);
+        GooString * val = this->parent()->getExportVal(i);
+        return val == nullptr ? this->getOptionName(i) : val;
     }
 };
 
@@ -148,15 +149,10 @@ namespace pdf2htmlEX {
                 << " width: " << width << "px; height: " << TO_STR(height) << "px;\" >" << endl;
 
             for (int i = 0; i < widget->getNumChoices(); i++) {
-                GooString * defaultVal = widget->getOptionVal(i);
-                GooString * fromNum = GooString::fromInt(i);
-
                 out << "<option value=\"" << widget->getOptionVal(i) << "\" "
                     << (widget->isSelected(i) ? "selected" : "") << ">"
-                    << (defaultVal == nullptr ? fromNum : defaultVal)
+                    << widget->getOptionName(i)
                     << "</option>";
-
-                free(fromNum);
             }
 
             out << "</select>";
