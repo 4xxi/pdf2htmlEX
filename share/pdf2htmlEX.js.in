@@ -281,7 +281,23 @@ Viewer.prototype = {
     this.container = document.getElementById(this.config['container_id']);
     this.loading_indicator = document.getElementsByClassName(this.config['loading_indicator_cls'])[0];
 
-    
+    {
+          var checkboxes = document.querySelectorAll("input[type='checkbox']");
+          for (var i = 0; i < checkboxes.length; ++i) {
+              checkboxes[i].addEventListener( 'change', function() {
+                  if(this.checked) {
+                      var checkboxesWithNames = document.querySelectorAll("input[type='checkbox'][name='" + this.name + "']");
+                      for (var j = 0; j < checkboxesWithNames.length; ++j) {
+                          if (checkboxesWithNames[j] !== this) {
+                              checkboxesWithNames[j].checked = false;
+                          }
+                      }
+                  } else {
+
+                  }
+              });
+          }
+    }
     {
       // Open the outline if nonempty
       var empty = true;

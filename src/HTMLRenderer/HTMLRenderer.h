@@ -166,6 +166,10 @@ protected:
     void process_outline_items(GooList * items);
 
     void process_form(std::ofstream & out);
+
+    void process_js(std::ofstream & out);
+
+    void process_js_link(FormWidget *, LinkAction * linkAction);
     
     void set_stream_flags (std::ostream & out);
 

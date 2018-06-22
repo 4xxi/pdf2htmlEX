@@ -239,6 +239,10 @@ void HTMLRenderer::endPage() {
     html_text_page.dump_css(f_css.fs);
     html_text_page.clear();
 
+    if (param.process_js) {
+        process_js(*f_curpage);
+    }
+
     // process form
     if(param.process_form) {
         process_form(*f_curpage);

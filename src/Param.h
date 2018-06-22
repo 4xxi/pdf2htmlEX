@@ -39,6 +39,7 @@ struct Param
     int process_outline;
     int process_annotation;
     int process_form;
+    int process_js;
     int correct_text_visibility;
     int printing;
     int fallback;
