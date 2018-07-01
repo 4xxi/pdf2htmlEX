@@ -42,6 +42,7 @@ void HTMLRenderer::drawString(GfxState * state, GooString * s)
         || ((font->getType() == fontType3) && (!param.process_type3))
       )
     {
+	printf("continue\n");
         return;
     }
 

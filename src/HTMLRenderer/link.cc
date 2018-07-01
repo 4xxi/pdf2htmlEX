@@ -129,7 +129,7 @@ static string get_linkdest_detail_str(LinkDest * dest, Catalog * catalog, int & 
     return sout.str();
 }
 
-string HTMLRenderer::get_linkaction_str(LinkAction * action, string & detail)
+string HTMLRenderer::get_linkaction_str(const LinkAction * action, string & detail)
 {
     string dest_str;
     detail = "";
@@ -140,7 +140,7 @@ string HTMLRenderer::get_linkaction_str(LinkAction * action, string & detail)
         {
             case actionGoTo:
                 {
-                    auto * real_action = dynamic_cast<LinkGoTo*>(action);
+                    auto * real_action = dynamic_cast<const LinkGoTo*>(action);
                     LinkDest * dest = nullptr;
                     if(auto _ = real_action->getDest())
                         dest = _->copy();
@@ -165,7 +165,7 @@ string HTMLRenderer::get_linkaction_str(LinkAction * action, string & detail)
                 break;
             case actionURI:
                 {
-                    auto * real_action = dynamic_cast<LinkURI*>(action);
+                    auto * real_action = dynamic_cast<const LinkURI*>(action);
                     dest_str = real_action->getURI()->getCString();
                 }
                 break;

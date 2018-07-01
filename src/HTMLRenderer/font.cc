@@ -49,6 +49,7 @@ using std::endl;
 
 string HTMLRenderer::dump_embedded_font (GfxFont * font, FontInfo & info)
 {
+    printf("dump_embedded_font\n");
     if(info.is_type3)
         return dump_type3_font(font, info);
 
@@ -66,10 +67,10 @@ string HTMLRenderer::dump_embedded_font (GfxFont * font, FontInfo & info)
 
         auto * id = font->getID();
 
-        Object ref_obj;
-        ref_obj.initRef(id->num, id->gen);
-        ref_obj.fetch(xref, &font_obj);
-        ref_obj.free();
+        {
+		Object ref_obj(id->num, id->gen);
+        	font_obj = ref_obj.fetch(xref);
+        }
 
         if(!font_obj.isDict())
         {
@@ -78,7 +79,9 @@ string HTMLRenderer::dump_embedded_font (GfxFont * font, FontInfo & info)
         }
 
         Dict * dict = font_obj.getDict();
-        if(dict->lookup("DescendantFonts", &font_obj2)->isArray())
+        font_obj2 = dict->lookup("DescendantFonts");
+
+        if(font_obj2.isArray())
         {
             if(font_obj2.arrayGetLength() == 0)
             {
@@ -89,24 +92,27 @@ string HTMLRenderer::dump_embedded_font (GfxFont * font, FontInfo & info)
                 if(font_obj2.arrayGetLength() > 1)
                     cerr << "TODO: multiple entries in DescendantFonts array" << endl;
 
-                if(font_obj2.arrayGet(0, &obj2)->isDict())
+                obj2 = font_obj2.arrayGet(0);
+                if(obj2.isDict())
                 {
                     dict = obj2.getDict();
                 }
             }
         }
 
-        if(!dict->lookup("FontDescriptor", &fontdesc_obj)->isDict())
+	fontdesc_obj = dict->lookup("FontDescriptor");
+        if(!fontdesc_obj.isDict())
         {
             cerr << "Cannot find FontDescriptor " << endl;
             throw 0;
         }
 
         dict = fontdesc_obj.getDict();
-
-        if(dict->lookup("FontFile3", &obj)->isStream())
+        if(dict->lookup("FontFile3").isStream())
         {
-            if(obj.streamGetDict()->lookup("Subtype", &obj1)->isName())
+            obj = dict->lookup("FontFile3"); 
+            obj1 = obj.streamGetDict()->lookup("Subtype");
+            if(obj1.isName())
             {
                 subtype = obj1.getName();
                 if(subtype == "Type1C")
@@ -133,12 +139,14 @@ string HTMLRenderer::dump_embedded_font (GfxFont * font, FontInfo & info)
                 throw 0;
             }
         }
-        else if (dict->lookup("FontFile2", &obj)->isStream())
+        else if (dict->lookup("FontFile2").isStream())
         { 
+            obj = dict->lookup("FontFile2");
             suffix = ".ttf";
         }
-        else if (dict->lookup("FontFile", &obj)->isStream())
+        else if (dict->lookup("FontFile").isStream())
         {
+            obj = dict->lookup("FontFile");
             suffix = ".pfa";
         }
         else
@@ -169,28 +177,22 @@ string HTMLRenderer::dump_embedded_font (GfxFont * font, FontInfo & info)
             outf.write(buf, len);
         }
         obj.streamClose();
+
     }
     catch(int) 
     {
         cerr << "Something wrong when trying to dump font " << hex << fn_id << dec << endl;
     }
 
-    obj2.free();
-    obj1.free();
-    obj.free();
-
-    fontdesc_obj.free();
-    font_obj2.free();
-    font_obj.free();
-
     return filepath;
 }
 
 string HTMLRenderer::dump_type3_font (GfxFont * font, FontInfo & info)
 {
+    printf("dump_type3_font function \n");
     assert(info.is_type3);
-
 #if ENABLE_SVG
+    printf("test1234\n");
     long long fn_id = info.id;
 
     FT_Library ft_lib;
@@ -375,6 +377,7 @@ string HTMLRenderer::dump_type3_font (GfxFont * font, FontInfo & info)
 
 void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo & info, bool get_metric_only)
 {
+    printf("embed_font\n");    
     if(param.debug)
     {
         cerr << "Embed font: " << filepath << " " << info.id << endl;
@@ -579,7 +582,7 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
         unordered_set<int> codeset;
         bool name_conflict_warned = false;
 
-        auto ctu = font->getToUnicode();
+	auto ctu = const_cast<CharCodeToUnicode*>(font->getToUnicode());
         std::fill(cur_mapping.begin(), cur_mapping.end(), -1);
         std::fill(width_list.begin(), width_list.end(), -1);
 
@@ -738,7 +741,6 @@ void HTMLRenderer::embed_font(const string & filepath, GfxFont * font, FontInfo 
         {
             cerr << "space width: " << info.space_width << endl;
         }
-
         if(ctu)
             ctu->decRefCnt();
     }

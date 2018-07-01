@@ -163,11 +163,11 @@ protected:
     void post_process(void);
 
     void process_outline(void);
-    void process_outline_items(GooList * items);
+    void process_outline_items(const GooList * items);
 
     void process_form(std::ofstream & out);
 
-    void process_js(std::ofstream & out);
+    //void process_js(std::ofstream & out);
 
     void process_js_link(FormWidget *, LinkAction * linkAction);
     
@@ -176,7 +176,7 @@ protected:
     void dump_css(void);
 
     // convert a LinkAction to a string that our Javascript code can understand
-    std::string get_linkaction_str(LinkAction *, std::string & detail);
+    std::string get_linkaction_str(const LinkAction *, std::string & detail);
 
     ////////////////////////////////////////////////////
     /*

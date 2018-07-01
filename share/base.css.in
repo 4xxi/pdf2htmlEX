@@ -7,8 +7,6 @@
 /* Part 1: Web Page Layout: Free to modify, except for a few of them which are required by pdf2htmlEX.js, see the comments */
 input, textarea, select {
     position: absolute;
-    background-color: white !important;
-
     margin: 0px;
     padding: 0px;
 }
@@ -18,7 +16,7 @@ input[type="checkbox"] {
 }
 
 input[type="text"] {
-    margin: 1px;
+    margin: 0px;
 }
 
 #sidebar { /* Sidebar */

@@ -31,7 +31,7 @@ int check_bom(const char *data, size_t size) {
     return -1;
 }
 
-std::ostream &operator<<(std::ostream &out, GooString *data) {
+std::ostream &operator<<(std::ostream &out, const GooString *data) {
     if (data == nullptr) {
         return out;
     }
@@ -55,12 +55,12 @@ public:
     SelectWidget(PDFDoc *docA, Object *dict, unsigned int num, const Ref &ref, FormField *p) :
             FormWidgetChoice(docA, dict, num, ref, p) {}
 
-    GooString *getOptionName(int i) {
+    const GooString *getOptionName(int i) {
         return this->parent()->getChoice(i);
     }
 
-    GooString * getOptionVal(int i) {
-        GooString * val = this->parent()->getExportVal(i);
+    const GooString * getOptionVal(int i) {
+        const GooString * val = this->parent()->getExportVal(i);
         return val == nullptr ? this->getOptionName(i) : val;
     }
 };
@@ -82,19 +82,19 @@ namespace pdf2htmlEX {
         }
 
         double getWidth() {
-            return x2 - x1;
+            return (int) (x2 - x1);
         }
 
         double getHeight() {
-            return y2 - y1;
+            return (int) (y2 - y1);
         }
     };
 
     struct FormPrint {
         static void print(ofstream &out, InputPosition &pos, FormWidgetText *textWidget) {
-            double width = pos.getWidth() - 2;
-            double height = pos.getHeight() - 2;
-            double fontSize = height - 2;
+            double width = pos.getWidth();
+            double height = pos.getHeight();
+            double fontSize = height;
             int maxLength = textWidget->getMaxLen() > 0 ? textWidget->getMaxLen() : 900000;
 
             if (textWidget->isMultiline()) {
@@ -107,9 +107,9 @@ namespace pdf2htmlEX {
                     << "maxlength=\"" << TO_STR(maxLength) << "\" "
                     << "rows=\"" << TO_STR(textareaRows) << "\" "
                     << "type=\"text\" "
-                    << "style=\"left: " << pos.x1 << "px; bottom: " << pos.y1 << "px;"
-                    << "width: " << width << "px;" << "height: " << TO_STR(height) << "px;"
-                    << "font-size: " << fontSize << "px;\""
+                    << "style=\"left: " << TO_STR((int) pos.x1) << "px; bottom: " << TO_STR((int) pos.y1) << "px;"
+                    << "width: " << TO_STR(width) << "px;" << "height: " << TO_STR(height) << "px;"
+                    << "font-size: " << TO_STR(fontSize) << "px;\""
                     << ">" << textWidget->getContent() << "</textarea>" << endl;
             } else {
                 out << "<input class=\"" << CSS::INPUT_TEXT_CN
@@ -117,36 +117,38 @@ namespace pdf2htmlEX {
                     << "\" maxlength=\"" << TO_STR(maxLength)
                     << "\" type=\"text\" value=\""
                     << textWidget->getContent() << "\""
-                    << "style=\"left: " << pos.x1 << "px; bottom: " << pos.y1 << "px;"
-                    << " width: " << width << "px; height: " << TO_STR(height)
+                    << "style=\"left: " << TO_STR((int) pos.x1) << "px; bottom: " << TO_STR((int) pos.y1) << "px;"
+                    << " width: " << TO_STR(width) << "px; height: " << TO_STR(height)
                     << "px; line-height: " << TO_STR(height) << "px; font-size: "
-                    << fontSize << "px;\" />" << endl;
+                    << TO_STR(fontSize) << "px;\" />" << endl;
             }
 
         }
 
         static void print(ofstream &out, InputPosition &pos, FormWidgetButton *formWidgetButton) {
-            double width = pos.getWidth() + 1;
-            double height = pos.getHeight() + 1;
+
+            double width = pos.getWidth();
+            double height = pos.getHeight();
+
             std::string checked = formWidgetButton->getState() ? "checked=\"checked\"" : "";
 
             out << "<input name=\"" << formWidgetButton->getFullyQualifiedName()
                 << "\" type=\"checkbox\""
                 << checked
                 << "data-checked=\"" << formWidgetButton->getOnStr() << "\""
-                << "style=\"left: " << pos.x1 << "px; bottom: " << pos.y1 << "px;"
-                << " width: " << width << "px; height: " << TO_STR(height) << "px;\" />" << endl;
+                << "style=\"left: " << TO_STR((int) pos.x1) << "px; bottom: " << TO_STR((int) pos.y1) << "px;"
+                << " width: " << TO_STR(width) << "px; height: " << TO_STR(height) << "px;\" />" << endl;
         }
 
         static void print(ofstream &out, InputPosition &pos, SelectWidget *widget) {
-            double width = pos.getWidth() + 1;
-            double height = pos.getHeight() + 3;
+            double width = pos.getWidth();
+            double height = pos.getHeight();
             std::string multiple = widget->isMultiSelect() ? " multiple " : "";
 
             out << "<select name=\"" << widget->getFullyQualifiedName()
                 << "\"" << multiple
-                << "style=\"left: " << pos.x1 << "px; bottom: " << pos.y1 << "px;"
-                << " width: " << width << "px; height: " << TO_STR(height) << "px;\" >" << endl;
+                << "style=\"left: " << TO_STR((int) pos.x1) << "px; bottom: " << TO_STR((int) pos.y1) << "px;"
+                << " width: " << TO_STR(width) << "px; height: " << TO_STR(height) << "px;\" >" << endl;
 
             for (int i = 0; i < widget->getNumChoices(); i++) {
                 out << "<option value=\"" << widget->getOptionVal(i) << "\" "

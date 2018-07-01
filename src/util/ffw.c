@@ -16,6 +16,7 @@
 #include <fontforge.h>
 #include <baseviews.h>
 
+#include "fontforge-config.h"
 #include "ffw.h"
 
 static real EPS=1e-6;
@@ -42,10 +43,10 @@ static char * strcopy(const char * str)
 {
     if(str == NULL) return NULL;
 
-    char * _ = strdup(str);
-    if(!_)
+    char * memory_test = strdup(str);
+    if(!memory_test)
         err("Not enough memory");
-    return _;
+    return memory_test;
 }
 
 static void dumb_logwarning(const char * format, ...) { }
@@ -55,6 +56,7 @@ static void dumb_post_error(const char * title, const char * error, ...) { }
 void ffw_init(int debug)
 {
     InitSimpleStuff();
+
     if ( default_encoding==NULL )
         default_encoding=FindOrMakeEncoding("ISO8859-1");
     if ( default_encoding==NULL )
@@ -69,12 +71,15 @@ void ffw_init(int debug)
 
     original_enc = FindOrMakeEncoding("original");
     unicodefull_enc = FindOrMakeEncoding("UnicodeFull");
-
     {
-        Val v;
-        v.type = v_int;
-        v.u.ival = 1;
-        SetPrefs("DetectDiagonalStems", &v, NULL);
+        Val v1;
+        v1.type = v_int;
+        v1.u.ival = 1;
+
+        Val v2;
+        v2.type = v_int;
+        v2.u.ival = 0;
+        SetPrefs("DetectDiagonalStems", &v1, &v2);
     }
 }
 

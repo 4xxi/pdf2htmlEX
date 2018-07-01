@@ -203,6 +203,7 @@ void HTMLRenderer::check_state_change(GfxState * state)
         need_recheck_position = true;
     }
 
+    printf("state change\n");
     // font name & size
     if(all_changed || font_changed)
     {
