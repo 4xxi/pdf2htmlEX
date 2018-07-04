@@ -33,9 +33,9 @@ RUN apk --no-cache --update add \
     cd / && curl -L -O https://poppler.freedesktop.org/poppler-data-0.4.9.tar.gz && tar -xvf poppler-data-0.4.9.tar.gz && cd poppler-data-0.4.9 &&  make && make install && \
     rm -rf /poppler-data-0.4.9.tar.gz /poppler-data-0.4.9 && \        
     cd / && curl -O https://poppler.freedesktop.org/poppler-0.66.0.tar.xz && tar xf poppler-0.66.0.tar.xz && \
-    cd /poppler-0.66.0 && mkdir build && cd build && cmake -DENABLE_XPDF_HEADERS=ON .. && sed -i '1s/^/#include <libgen.h> /' /poppler-0.66.0/utils/pdfsig.cc && \
-    sed -i 's/basename(filename)/basename((char *)filename)/g' /poppler-0.66.0/utils/pdfsig.cc && make && make install && \
-    rm -rf /poppler-0.66.0 /poppler-0.66.0.tar.xz && \
+    cd / && git clone --depth 1 -o origin -b poppler-0.66 https://github.com/4xxi/poppler.git && \
+    cd /poppler && mkdir build && cd build && cmake -DENABLE_XPDF_HEADERS=ON .. && \
+    make && make install && rm -rf /poppler \
     cd / && curl -L -O https://github.com/fontforge/fontforge/archive/20170731.tar.gz &&  tar -xvf 20170731.tar.gz && \
     cd fontforge-20170731 && ./bootstrap && ./configure --prefix=/usr --without-libzmq --without-x && make && make install && \
     rm -rf /fontforge-20170731 /20170731.tar.gz && \
