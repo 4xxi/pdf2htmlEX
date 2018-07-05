@@ -294,7 +294,7 @@ Viewer.prototype = {
                     checkboxesWithNames[j].checked = false;
                 }
             }
-        }       
+        });       
     }
 
     {
